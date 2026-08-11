@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You — Forex Trading Secrets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0D10; --panel:#12151A; --line:#262B32;
+    --gold:#C79A3C; --ink:#EDEAE3; --ink-dim:#9BA0A8; --ink-faint:#5C6169;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  a{text-decoration:none;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px; line-height:1.6;
+  }
+  .card{
+    max-width:560px; width:100%;
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:56px 44px; text-align:center;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em;}
+  .icon{
+    width:56px; height:56px; border-radius:50%; border:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 24px;
+    font-size:26px; color:var(--gold);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  }
+  h1{font-family:'Bebas Neue',sans-serif; font-size:38px; margin-bottom:16px;}
+  p{color:var(--ink-dim); font-size:15.5px; margin-bottom:10px;}
+  .btn{
+    display:inline-block; background:var(--gold); color:#14171C; font-weight:700;
+    font-size:15px; padding:16px 34px; border-radius:3px; margin-top:26px; border:none; cursor:pointer; font-family:inherit;
+  }
+  .btn:hover{background:#D9AC4B;}
+  .fineprint{
+    margin-top:30px; padding-top:22px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--ink-faint);
+  }
+  a{color:var(--gold);}
+  .spinner{
+    width:32px; height:32px; border:3px solid var(--line); border-top-color:var(--gold);
+    border-radius:50%; margin:0 auto 24px; animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="card" id="state-checking">
+  <div class="spinner"></div>
+  <div class="eyebrow">One Moment</div>
+  <h1>Confirming your payment…</h1>
+  <p>This takes a second — we're checking directly with Paystack that everything went through.</p>
+</div>
+
+<div class="card" id="state-success" style="display:none;">
+  <div class="icon">✓</div>
+  <div class="eyebrow">Payment Received</div>
+  <h1>You're in.</h1>
+  <p>Thank you for picking up <strong>Forex Trading Secrets</strong>. Your copy is ready — click below to download it now.</p>
+
+  <!--
+    Replace the href below with your actual hosted EPUB/PDF link
+    (Google Drive "anyone with the link", Dropbox, S3, etc.)
+    Keep this link private/unlisted — it is the actual product.
+  -->
+  <a href="https://YOUR_DOWNLOAD_LINK_HERE" class="btn">Download Your Copy</a>
+
+  <p style="margin-top:20px; font-size:13px;">A copy of this link has also been sent to the email you used at checkout. Save it somewhere safe — you can re-download any time.</p>
+
+  <div class="fineprint">
+    Trouble with your download? Email <a href="mailto:support@nhantsicapital.com">support@nhantsicapital.com</a> and it'll be sorted out.<br><br>
+    Nothing in Forex Trading Secrets is investment advice. It is trading education, and every strategy described carries risk. Trade accordingly.
+  </div>
+</div>
+
+<div class="card" id="state-failed" style="display:none;">
+  <div class="icon" style="border-color:#C0392B; color:#C0392B;">!</div>
+  <div class="eyebrow" style="color:#C0392B;">Couldn't Confirm Payment</div>
+  <h1>Something's not right yet.</h1>
+  <p id="failed-message">We weren't able to confirm this payment. If you were charged, this is almost always just a delay on Paystack's side — try refreshing this page in a minute.</p>
+  <button class="btn" onclick="location.reload()">Try Again</button>
+  <div class="fineprint">
+    Still stuck after a few minutes? Email <a href="mailto:support@nhantsicapital.com">support@nhantsicapital.com</a> with your reference number (shown below, if we have one) and it'll be sorted out by hand.<br><br>
+    <span id="ref-display" class="mono"></span>
+  </div>
+</div>
+
+<div class="card" id="state-noref" style="display:none;">
+  <div class="icon" style="border-color:var(--ink-faint); color:var(--ink-faint);">?</div>
+  <div class="eyebrow">No Order Found</div>
+  <h1>Nothing to confirm here.</h1>
+  <p>This page only shows a download once a payment reference is present — which normally means arriving here straight after checkout. If you just paid and landed here some other way, check the confirmation email from checkout, or head back and try again.</p>
+  <a href="index.html" class="btn">Back to the Book</a>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var reference = params.get('reference');
+
+  function show(id){
+    ['state-checking','state-success','state-failed','state-noref'].forEach(function(s){
+      document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+    });
+  }
+
+  if(!reference){
+    show('state-noref');
+    return;
+  }
+
+  // Never trust the URL alone — a reference in the address bar proves
+  // nothing on its own. Ask our own server to confirm with Paystack
+  // directly before this page shows any download link.
+  fetch('/api/paystack-verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reference: reference })
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(data.verified){
+      show('state-success');
+    } else {
+      document.getElementById('ref-display').textContent = 'Reference: ' + reference;
+      show('state-failed');
+    }
+  })
+  .catch(function(){
+    document.getElementById('failed-message').textContent =
+      "We couldn't reach our server to confirm this payment — check your connection and try again.";
+    document.getElementById('ref-display').textContent = 'Reference: ' + reference;
+    show('state-failed');
+  });
+})();
+</script>
+
+</body>
+</html>
